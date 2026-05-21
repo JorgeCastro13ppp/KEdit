@@ -1,14 +1,22 @@
-Hola
-jaja
-holita
-holasa
-hola asa
-holi
-ola
-alo
-jaja
-jaja
-jujuju
-jajaje
-jjijij 
+Hola como estás. esto es una pruebna apara comprobar que el cursor funciona bien
+fun funcionJEJE(){
+system.out.println("Hola")
+} //Comentario 
+when
+String palabra
+Int numero
+Boolean falso;
+Map mapa();
+List lista <lista>()
+class clase {
+
+}
+
+
 hola
+jeje
+xd
+jajaja
+jajaja
+ejjejej
+nose que más poner

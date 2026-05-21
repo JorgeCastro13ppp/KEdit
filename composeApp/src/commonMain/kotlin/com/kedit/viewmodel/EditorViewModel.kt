@@ -9,6 +9,7 @@ import com.kedit.model.Settings
 import kotlin.time.Clock
 import kotlinx.coroutines.*
 import com.kedit.repository.FileRepository
+import com.kedit.repository.SettingsRepository
 
 
 class EditorViewModel {
@@ -18,12 +19,17 @@ class EditorViewModel {
 
     private val repository =
         FileRepository()
+
+    private val settingsRepository =
+        SettingsRepository()
     private var autoSaveJob: Job? = null
 
     var state by mutableStateOf(EditorState())
         private set
 
-    var settings by mutableStateOf(Settings())
+    var settings by mutableStateOf(
+        settingsRepository.loadSettings()
+    )
         private set
 
     init {
@@ -187,6 +193,8 @@ class EditorViewModel {
         settings = settings.copy(
             isDarkMode = !settings.isDarkMode
         )
+
+        settingsRepository.saveSettings(settings)
     }
 
     fun toggleAutoSave(): Boolean {
@@ -194,6 +202,8 @@ class EditorViewModel {
         settings = settings.copy(
             autoSaveEnabled = !settings.autoSaveEnabled
         )
+
+        settingsRepository.saveSettings(settings)
 
         return settings.autoSaveEnabled
     }

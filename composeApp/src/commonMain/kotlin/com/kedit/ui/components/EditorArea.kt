@@ -17,6 +17,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.TextRange
 
 @Composable
 fun EditorArea(
@@ -41,6 +44,9 @@ fun EditorArea(
 
     val horizontalScrollState =
         rememberScrollState()
+
+    val highlightedText =
+        highlightKotlinSyntax(content)
 
     LaunchedEffect(
         targetLine,
@@ -129,21 +135,32 @@ fun EditorArea(
                     .padding(top = 3.dp),
 
                 textStyle = TextStyle(
-                    fontFamily =
-                        FontFamily.Monospace,
-
-                    color =
-                        editorTextColor,
-
-                    lineHeight =
-                        24.sp,
-
-                    fontSize =
-                        15.sp
+                    fontFamily = FontFamily.Monospace,
+                    color = editorTextColor.copy(alpha = 0f),
+                    lineHeight = 24.sp,
+                    fontSize = 15.sp
                 ),
 
                 cursorBrush =
-                    SolidColor(editorTextColor)
+                    SolidColor(editorTextColor),
+
+                decorationBox = { innerTextField ->
+
+                    Box {
+
+                        Text(
+                            text = highlightedText,
+                            style = TextStyle(
+                                fontFamily = FontFamily.Monospace,
+                                fontSize = 15.sp,
+                                lineHeight = 24.sp,
+                                color = editorTextColor
+                            )
+                        )
+
+                        innerTextField()
+                    }
+                }
             )
         }
     }
