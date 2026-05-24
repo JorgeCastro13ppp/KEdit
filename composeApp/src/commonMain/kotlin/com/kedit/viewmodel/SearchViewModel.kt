@@ -252,26 +252,8 @@ class SearchViewModel {
             content.replaceRange(
                 startIndex = match.index,
                 endIndex = match.index + state.query.length,
-                replacement = state.replacement
+                replacement = state.replaceText
             )
-
-        val newMatches =
-            findMatches(
-                content = newContent,
-                query = state.query,
-                caseSensitive = state.caseSensitive
-            )
-
-        val newIndex =
-            if (newMatches.isEmpty())
-                0
-            else
-                state.currentIndex.coerceAtMost(newMatches.lastIndex)
-
-        state = state.copy(
-            matches = newMatches,
-            currentIndex = newIndex
-        )
 
         return newContent
     }
@@ -283,40 +265,31 @@ class SearchViewModel {
         if (state.query.isBlank())
             return content
 
-        val newContent =
-            if (state.caseSensitive) {
+        return if (state.caseSensitive) {
 
-                content.replace(
-                    oldValue = state.query,
-                    newValue = state.replacement
-                )
-
-            } else {
-
-                val regex =
-                    Regex(
-                        pattern = Regex.escape(state.query),
-                        option = RegexOption.IGNORE_CASE
-                    )
-
-                regex.replace(
-                    input = content,
-                    replacement = state.replacement
-                )
-            }
-
-        val newMatches =
-            findMatches(
-                content = newContent,
-                query = state.query,
-                caseSensitive = state.caseSensitive
+            content.replace(
+                oldValue = state.query,
+                newValue = state.replaceText
             )
 
-        state = state.copy(
-            matches = newMatches,
-            currentIndex = 0
-        )
+        } else {
 
-        return newContent
+            content.replace(
+                Regex(
+                    pattern = Regex.escape(state.query),
+                    option = RegexOption.IGNORE_CASE
+                ),
+                state.replaceText
+            )
+        }
+    }
+
+    fun updateReplaceText(
+        replaceText: String
+    ) {
+
+        state = state.copy(
+            replaceText = replaceText
+        )
     }
 }

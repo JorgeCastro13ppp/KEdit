@@ -14,14 +14,15 @@ import com.kedit.model.Document
 
 @Composable
 fun Sidebar(
+    modifier: Modifier = Modifier,
     documents: List<Document>,
     activeDocumentId: String?,
     onSelectDocument: (String) -> Unit
 ) {
 
     Column(
-        modifier = Modifier
-            .width(250.dp)
+        modifier = modifier
+            .fillMaxWidth()
             .fillMaxHeight()
             .background(
                 MaterialTheme.colorScheme.surfaceVariant

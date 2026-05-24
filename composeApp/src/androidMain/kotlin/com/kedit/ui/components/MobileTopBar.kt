@@ -1,0 +1,82 @@
+package com.kedit.ui.components
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.clickable
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+
+@Composable
+fun MobileTopBar(
+    documentName: String,
+    onNewDocument: () -> Unit,
+    onToggleTheme: () -> Unit,
+    onToggleSearch: () -> Unit
+) {
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .statusBarsPadding()
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(
+                horizontal = 12.dp,
+                vertical = 10.dp
+            ),
+
+        horizontalArrangement =
+            Arrangement.spacedBy(18.dp),
+
+        verticalAlignment =
+            Alignment.CenterVertically
+    ) {
+
+        Text(
+            text = documentName,
+            fontSize = 13.sp,
+            fontFamily = FontFamily.Monospace,
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.weight(1f)
+        )
+
+        Text(
+            text = "Nuevo",
+            fontSize = 13.sp,
+            fontFamily = FontFamily.Monospace,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.clickable {
+                onNewDocument()
+            }
+        )
+
+        Text(
+            text = "Tema",
+            fontSize = 13.sp,
+            fontFamily = FontFamily.Monospace,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.clickable {
+                onToggleTheme()
+            }
+        )
+
+        Text(
+            text = "Buscar",
+            fontSize = 13.sp,
+            fontFamily = FontFamily.Monospace,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.clickable {
+                onToggleSearch()
+            }
+        )
+    }
+}

@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.kedit.model.Document
 import com.kedit.model.EditorState
+import com.kedit.model.FileItem
 import com.kedit.model.Settings
 import kotlin.time.Clock
 import kotlinx.coroutines.*
@@ -34,6 +35,21 @@ class EditorViewModel {
 
     init {
         createDocument()
+        loadLastDirectory()
+    }
+
+    private fun loadLastDirectory() {
+
+        val directory =
+            settings.lastDirectory ?: return
+
+        val files =
+            repository.listFiles(directory)
+
+        state = state.copy(
+            currentDirectory = directory,
+            files = files
+        )
     }
 
 
@@ -280,5 +296,120 @@ class EditorViewModel {
         )
     }
 
+    fun openDirectory() {
 
+        val directoryPath =
+            repository.pickDirectory() ?: return
+
+        val files =
+            repository.listFiles(directoryPath)
+
+        state = state.copy(
+            currentDirectory = directoryPath,
+            files = files
+        )
+
+        settings = settings.copy(
+            lastDirectory = directoryPath
+        )
+
+        settingsRepository.saveSettings(settings)
+    }
+
+    fun openFileFromExplorer(
+        path: String
+    ) {
+
+        val alreadyOpen =
+            state.openDocuments.find { document ->
+                document.path == path
+            }
+
+        if (alreadyOpen != null) {
+
+            state = state.copy(
+                activeDocument = alreadyOpen
+            )
+
+            return
+        }
+
+        val content =
+            repository.readFile(path)
+
+        val fileName =
+            repository.getFileName(path)
+
+        val document =
+            Document(
+                name = fileName,
+                path = path,
+                content = content,
+                isModified = false
+            )
+
+        val updatedDocuments =
+            state.openDocuments + document
+
+        state = state.copy(
+            openDocuments = updatedDocuments,
+            activeDocument = document
+        )
+    }
+
+    fun openExplorerItem(
+        fileItem: FileItem
+    ) {
+
+        if (fileItem.isDirectory) {
+
+            val files =
+                repository.listFiles(fileItem.path)
+
+            state = state.copy(
+                currentDirectory = fileItem.path,
+                files = files
+            )
+
+            settings = settings.copy(
+                lastDirectory = fileItem.path
+            )
+
+            settingsRepository.saveSettings(settings)
+
+        } else {
+
+            openFileFromExplorer(fileItem.path)
+        }
+    }
+
+    fun goToParentDirectory() {
+
+        val current =
+            state.currentDirectory ?: return
+
+        val parent =
+            repository.getParentDirectory(current) ?: return
+
+        val files =
+            repository.listFiles(parent)
+
+        state = state.copy(
+            currentDirectory = parent,
+            files = files
+        )
+
+        settings = settings.copy(
+            lastDirectory = parent
+        )
+
+        settingsRepository.saveSettings(settings)
+    }
+
+    fun toggleExplorerVisibility() {
+
+        state = state.copy(
+            isExplorerVisible = !state.isExplorerVisible
+        )
+    }
 }

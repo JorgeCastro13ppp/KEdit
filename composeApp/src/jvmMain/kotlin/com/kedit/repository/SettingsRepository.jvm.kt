@@ -29,6 +29,11 @@ actual class SettingsRepository actual constructor() {
             settings.autoSaveEnabled.toString()
         )
 
+        properties.setProperty(
+            "lastDirectory",
+            settings.lastDirectory ?: ""
+        )
+
         settingsFile.outputStream().use { output ->
             properties.store(
                 output,
@@ -49,6 +54,14 @@ actual class SettingsRepository actual constructor() {
             properties.load(input)
         }
 
+        val lastDirectory =
+            properties.getProperty(
+                "lastDirectory",
+                ""
+            ).ifBlank {
+                null
+            }
+
         return Settings(
             isDarkMode =
                 properties.getProperty(
@@ -60,7 +73,10 @@ actual class SettingsRepository actual constructor() {
                 properties.getProperty(
                     "autoSaveEnabled",
                     "true"
-                ).toBoolean()
+                ).toBoolean(),
+
+            lastDirectory =
+                lastDirectory
         )
     }
 }

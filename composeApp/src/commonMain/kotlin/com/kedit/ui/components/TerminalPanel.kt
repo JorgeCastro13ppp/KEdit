@@ -21,15 +21,11 @@ import androidx.compose.ui.Alignment
 
 @Composable
 fun TerminalPanel(
-
     state: TerminalState,
-
+    currentDirectory: String?,
     onInputChange: (String) -> Unit,
-
     onExecute: () -> Unit,
-
     onIncreaseHeight: () -> Unit,
-
     onDecreaseHeight: () -> Unit
 ) {
 
@@ -135,8 +131,7 @@ fun TerminalPanel(
         ) {
 
             Text(
-
-                text = "C:\\RutaInventada/KEdit> ",
+                text = "${currentDirectory ?: "KEdit"}> ",
 
                 fontFamily =
                     FontFamily.Monospace,

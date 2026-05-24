@@ -1,5 +1,7 @@
 package com.kedit.repository
 
+import com.kedit.model.FileItem
+
 actual class FileRepository actual constructor() {
 
     actual fun saveFile(
@@ -32,5 +34,24 @@ actual class FileRepository actual constructor() {
     ): String {
 
         return path.substringAfterLast("/")
+    }
+
+    actual fun pickDirectory(): String? {
+
+        return null
+    }
+
+    actual fun listFiles(
+        directoryPath: String
+    ): List<FileItem> {
+
+        return emptyList()
+    }
+
+    actual fun getParentDirectory(
+        path: String
+    ): String? {
+
+        return null
     }
 }

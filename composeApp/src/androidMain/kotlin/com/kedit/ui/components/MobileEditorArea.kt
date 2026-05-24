@@ -2,7 +2,15 @@ package com.kedit.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
@@ -17,8 +25,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
 @Composable
-fun EditorArea(
+fun MobileEditorArea(
     content: String,
     onContentChange: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -34,14 +43,6 @@ fun EditorArea(
 
     val editorTextColor =
         MaterialTheme.colorScheme.onBackground
-
-    val editorTextStyle =
-        TextStyle(
-            fontFamily = FontFamily.Monospace,
-            fontSize = 15.sp,
-            lineHeight = 24.sp,
-            color = editorTextColor
-        )
 
     val verticalScrollState =
         rememberScrollState()
@@ -60,10 +61,10 @@ fun EditorArea(
         if (targetLine != null) {
 
             val approximateLineHeightPx =
-                24
+                22
 
             val visibleOffsetLines =
-                5
+                4
 
             val targetScroll =
                 ((targetLine - visibleOffsetLines) * approximateLineHeightPx)
@@ -79,7 +80,10 @@ fun EditorArea(
         modifier = modifier
             .fillMaxSize()
             .background(editorBackground)
-            .padding(16.dp)
+            .padding(
+                horizontal = 10.dp,
+                vertical = 8.dp
+            )
     ) {
 
         Row(
@@ -89,11 +93,9 @@ fun EditorArea(
                 .verticalScroll(verticalScrollState)
         ) {
 
-            // Line numbers
-
             Column(
                 modifier = Modifier
-                    .padding(top = 1.dp),
+                    .padding(top = 2.dp),
 
                 horizontalAlignment =
                     Alignment.End
@@ -102,29 +104,21 @@ fun EditorArea(
                 for (i in 1..lineCount) {
 
                     Text(
-                        fontSize = 14.sp,
-
                         text = i.toString(),
-
+                        fontSize = 12.sp,
                         color =
                             MaterialTheme.colorScheme.primary.copy(
-                                alpha = 0.30f
+                                alpha = 0.35f
                             ),
-
-                        fontFamily =
-                            FontFamily.Monospace,
-
-                        lineHeight =
-                            24.sp
+                        fontFamily = FontFamily.Monospace,
+                        lineHeight = 22.sp
                     )
                 }
             }
 
             Spacer(
-                modifier = Modifier.width(24.dp)
+                modifier = Modifier.width(14.dp)
             )
-
-            // Editor
 
             BasicTextField(
                 value = content,
@@ -134,12 +128,15 @@ fun EditorArea(
                 },
 
                 modifier = Modifier
-                    .widthIn(min = 700.dp)
+                    .widthIn(min = 320.dp)
                     .fillMaxHeight()
-                    .padding(top = 3.dp),
+                    .padding(top = 2.dp),
 
-                textStyle = editorTextStyle.copy(
-                    color = editorTextColor.copy(alpha = 0f)
+                textStyle = TextStyle(
+                    fontFamily = FontFamily.Monospace,
+                    color = editorTextColor.copy(alpha = 0f),
+                    lineHeight = 22.sp,
+                    fontSize = 14.sp
                 ),
 
                 cursorBrush =
@@ -147,23 +144,19 @@ fun EditorArea(
 
                 decorationBox = { innerTextField ->
 
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
+                    Box {
+
                         Text(
                             text = highlightedText,
-                            style = editorTextStyle,
-                            modifier = Modifier
-                                .padding(top = 0.dp)
+                            style = TextStyle(
+                                fontFamily = FontFamily.Monospace,
+                                fontSize = 14.sp,
+                                lineHeight = 22.sp,
+                                color = editorTextColor
+                            )
                         )
 
-                        Box(
-                            modifier = Modifier
-                                .padding(top = 1.dp)
-                        ) {
-                            innerTextField()
-                        }
+                        innerTextField()
                     }
                 }
             )

@@ -1,5 +1,7 @@
 package com.kedit.repository
 
+import com.kedit.model.FileItem
+
 expect class FileRepository() {
 
     fun saveFile(
@@ -16,5 +18,15 @@ expect class FileRepository() {
     fun getFileName(
         path: String
     ): String
+
+    fun pickDirectory(): String?
+
+    fun listFiles(
+        directoryPath: String
+    ): List<FileItem>
+    fun getParentDirectory(
+        path: String
+    ): String?
+
 
 }

@@ -3,8 +3,10 @@ package com.kedit.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -15,6 +17,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kedit.model.Document
+import androidx.compose.ui.text.style.TextOverflow
 
 @Composable
 fun TabItem(
@@ -46,7 +49,7 @@ fun TabItem(
                 horizontal = 6.dp,
                 vertical = 8.dp
             )
-            .widthIn(min = 120.dp, max = 220.dp),
+            .widthIn(min = 120.dp, max = 320.dp),
 
         horizontalArrangement =
             Arrangement.spacedBy(10.dp),
@@ -60,35 +63,37 @@ fun TabItem(
                 document.name +
                         if (document.isModified) "*" else "",
 
-            color =
-                textColor,
+            color = textColor,
 
-            fontSize =
-                13.sp,
+            fontSize = 13.sp,
 
-            fontFamily =
-                FontFamily.Monospace,
+            fontFamily = FontFamily.Monospace,
 
-            modifier =
-                Modifier.weight(1f)
-        )
+            maxLines = 1,
 
-        Text(
-            text = "×",
-
-            color =
-                textColor.copy(alpha = 0.75f),
-
-            fontSize =
-                20.sp,
+            overflow = TextOverflow.Ellipsis,
 
             modifier = Modifier
-                .clickable {
-                    onClose()
-                }
-                .padding(
-                    horizontal = 4.dp
+                .widthIn(
+                    min = 80.dp,
+                    max = 260.dp
                 )
         )
+
+        Box(
+            modifier = Modifier
+                .size(24.dp)
+                .clickable {
+                    onClose()
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "×",
+                color = textColor.copy(alpha = 0.75f),
+                fontSize = 18.sp,
+                fontFamily = FontFamily.Monospace
+            )
+        }
     }
 }

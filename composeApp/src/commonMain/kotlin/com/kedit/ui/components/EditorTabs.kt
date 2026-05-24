@@ -4,9 +4,18 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import com.kedit.model.Document
+import kotlinx.coroutines.launch
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun EditorTabs(
@@ -16,23 +25,70 @@ fun EditorTabs(
     onCloseDocument: (String) -> Unit
 ) {
 
+    val scrollState =
+        rememberScrollState()
+
+    val scope =
+        rememberCoroutineScope()
+
     Row(
-        modifier = androidx.compose.ui.Modifier
-            .horizontalScroll(rememberScrollState()).fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
     ) {
 
-        documents.forEach { document ->
-
-            TabItem(
-                document = document,
-                isActive = document.id == activeDocumentId,
-                onClick = {
-                    onSelectDocument(document.id)
+        Box(
+            modifier = Modifier
+                .width(28.dp)
+                .height(40.dp)
+                .clickable {
+                    scope.launch {
+                        scrollState.animateScrollTo(
+                            (scrollState.value - 180)
+                                .coerceAtLeast(0)
+                        )
+                    }
                 },
-                onClose = {
-                    onCloseDocument(document.id)
-                }
-            )
+            contentAlignment = Alignment.Center
+        ) {
+            Text("<")
+        }
+
+        Row(
+            modifier = Modifier
+                .weight(1f)
+                .horizontalScroll(scrollState)
+        ) {
+
+            documents.forEach { document ->
+
+                TabItem(
+                    document = document,
+                    isActive = document.id == activeDocumentId,
+                    onClick = {
+                        onSelectDocument(document.id)
+                    },
+                    onClose = {
+                        onCloseDocument(document.id)
+                    }
+                )
+            }
+        }
+
+        Box(
+            modifier = Modifier
+                .width(28.dp)
+                .height(40.dp)
+                .clickable {
+                    scope.launch {
+                        scrollState.animateScrollTo(
+                            (scrollState.value + 180)
+                                .coerceAtMost(scrollState.maxValue)
+                        )
+                    }
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Text(">")
         }
     }
 }

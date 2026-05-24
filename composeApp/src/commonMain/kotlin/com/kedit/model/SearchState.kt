@@ -4,6 +4,7 @@ data class SearchState(
     val isVisible: Boolean = false,
     val query: String = "",
     val replacement: String = "",
+    val replaceText: String = "",
     val matches: List<SearchMatch> = emptyList(),
     val currentIndex: Int = 0,
     val caseSensitive: Boolean = false

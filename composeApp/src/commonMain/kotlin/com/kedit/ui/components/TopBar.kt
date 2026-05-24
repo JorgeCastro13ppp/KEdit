@@ -4,13 +4,26 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Alignment
+
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun TopBar(
@@ -22,7 +35,10 @@ fun TopBar(
     onToggleTerminal: () -> Unit,
     isTerminalVisible: Boolean,
     onSaveAsDocument: () -> Unit,
-    onToggleSearch: () -> Unit
+    onToggleSearch: () -> Unit,
+    onOpenDirectory: () -> Unit,
+    onToggleExplorer: () -> Unit,
+    isExplorerVisible: Boolean
 ) {
     Row(
         modifier = Modifier
@@ -37,47 +53,78 @@ fun TopBar(
             style = MaterialTheme.typography.titleMedium
         )
 
-        Button(onClick = onNewDocument) {
-            Text("Nuevo")
-        }
-        Button(onClick = onToggleTheme) {
-            Text("Tema")
-        }
-        Button(
-            onClick = onSaveDocument
+        Row(
+            modifier = Modifier
+                .horizontalScroll(rememberScrollState()),
+
+            horizontalArrangement =
+                Arrangement.spacedBy(4.dp),
+
+            verticalAlignment =
+                Alignment.CenterVertically
         ) {
 
-            Text("Guardar")
-        }
+            TopBarAction("Nuevo", onNewDocument)
+            TopBarAction("Abrir", onOpenDocument)
+            TopBarAction("Guardar", onSaveDocument)
+            TopBarAction("Guardar como", onSaveAsDocument)
+            TopBarAction("Buscar", onToggleSearch)
+            TopBarAction("Tema", onToggleTheme)
 
-        Button(
-            onClick = onOpenDocument
-        ) {
+            TopBarAction(
+                if (isTerminalVisible) "Terminal-" else "Terminal+",
+                onToggleTerminal
+            )
 
-            Text("Abrir")
-        }
+            TopBarAction("Carpeta", onOpenDirectory)
 
-        Button(
-            onClick = onToggleTerminal
-        ) {
-            Text(
-                if (isTerminalVisible)
-                    "Ocultar terminal"
-                else
-                    "Mostrar terminal"
+            TopBarAction(
+                if (isExplorerVisible) "Explorador-" else "Explorador+",
+                onToggleExplorer
             )
         }
+    }
 
-        Button(
-            onClick = onSaveAsDocument
-        ) {
-            Text("Guardar como")
+
+}
+
+@Composable
+private fun TopBarAction(
+    text: String,
+    onClick: () -> Unit
+) {
+    val interactionSource =
+        remember {
+            MutableInteractionSource()
         }
 
-        Button(
-            onClick = onToggleSearch
-        ) {
-            Text("Buscar")
-        }
+    val isHovered by
+    interactionSource.collectIsHoveredAsState()
+
+    Box(
+        modifier = Modifier
+            .height(32.dp)
+            .background(
+                if (isHovered)
+                    MaterialTheme.colorScheme.primary.copy(alpha = 0.16f)
+                else
+                    Color.Transparent
+            )
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null
+            ) {
+                onClick()
+            }
+            .padding(
+                horizontal = 12.dp,
+                vertical = 6.dp
+            )
+    ) {
+        Text(
+            text = text,
+            color = MaterialTheme.colorScheme.onSurface,
+            fontSize = 13.sp
+        )
     }
 }

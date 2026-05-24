@@ -1,6 +1,7 @@
 package com.kedit.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,9 +32,9 @@ fun SearchBar(
     onToggleCaseSensitive: () -> Unit,
     onClear: () -> Unit,
     onClose: () -> Unit,
-    onReplacementChange: (String) -> Unit,
     onReplaceCurrent: () -> Unit,
-    onReplaceAll: () -> Unit
+    onReplaceAll: () -> Unit,
+    onReplaceTextChange: (String) -> Unit,
 ) {
 
     val currentMatch =
@@ -63,38 +64,48 @@ fun SearchBar(
                 MaterialTheme.colorScheme.surfaceVariant
             )
             .padding(
-                horizontal = 12.dp,
-                vertical = 8.dp
+                horizontal = 8.dp,
+                vertical = 4.dp
             )
     ) {
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
+
+            horizontalArrangement =
+                Arrangement.spacedBy(8.dp),
+
+            verticalAlignment =
+                Alignment.CenterVertically
         ) {
 
             Text(
                 text = "Buscar:",
-                fontSize = 13.sp,
+                fontSize = 12.sp,
                 fontFamily = FontFamily.Monospace,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             BasicTextField(
                 value = state.query,
+
                 onValueChange = {
                     onQueryChange(it)
                 },
+
                 singleLine = true,
+
                 textStyle = TextStyle(
                     fontFamily = FontFamily.Monospace,
-                    fontSize = 14.sp,
+                    fontSize = 13.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 ),
-                cursorBrush = SolidColor(
-                    MaterialTheme.colorScheme.onSurfaceVariant
-                ),
+
+                cursorBrush =
+                    SolidColor(
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    ),
+
                 modifier = Modifier
                     .weight(1f)
                     .background(
@@ -102,84 +113,37 @@ fun SearchBar(
                     )
                     .padding(
                         horizontal = 8.dp,
-                        vertical = 6.dp
+                        vertical = 5.dp
                     )
             )
 
             Text(
-                text = resultText,
-                fontSize = 13.sp,
-                fontFamily = FontFamily.Monospace,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-
-            Button(
-                onClick = onToggleCaseSensitive
-            ) {
-                Text(
-                    if (state.caseSensitive)
-                        "Aa"
-                    else
-                        "aa"
-                )
-            }
-
-            Button(
-                onClick = onPrevious
-            ) {
-                Text("Anterior")
-            }
-
-            Button(
-                onClick = onNext
-            ) {
-                Text("Siguiente")
-            }
-
-            Button(
-                onClick = onClear
-            ) {
-                Text("Limpiar")
-            }
-
-            Button(
-                onClick = onClose
-            ) {
-                Text("Cerrar")
-            }
-        }
-
-        Spacer(
-            modifier = Modifier.height(8.dp)
-        )
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-
-            Text(
                 text = "Reemplazar:",
-                fontSize = 13.sp,
+                fontSize = 12.sp,
                 fontFamily = FontFamily.Monospace,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             BasicTextField(
-                value = state.replacement,
+                value = state.replaceText,
+
                 onValueChange = {
-                    onReplacementChange(it)
+                    onReplaceTextChange(it)
                 },
+
                 singleLine = true,
+
                 textStyle = TextStyle(
                     fontFamily = FontFamily.Monospace,
-                    fontSize = 14.sp,
+                    fontSize = 13.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 ),
-                cursorBrush = SolidColor(
-                    MaterialTheme.colorScheme.onSurfaceVariant
-                ),
+
+                cursorBrush =
+                    SolidColor(
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    ),
+
                 modifier = Modifier
                     .weight(1f)
                     .background(
@@ -187,36 +151,90 @@ fun SearchBar(
                     )
                     .padding(
                         horizontal = 8.dp,
-                        vertical = 6.dp
+                        vertical = 5.dp
                     )
             )
 
-            Button(
-                onClick = onReplaceCurrent
-            ) {
-                Text("Reemplazar")
-            }
+            Text(
+                text = resultText,
+                fontSize = 12.sp,
+                fontFamily = FontFamily.Monospace,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
 
-            Button(
+            SearchAction(
+                text =
+                    if (state.caseSensitive)
+                        "Aa"
+                    else
+                        "aa",
+                onClick = onToggleCaseSensitive
+            )
+
+            SearchAction(
+                text = "<",
+                onClick = onPrevious
+            )
+
+            SearchAction(
+                text = ">",
+                onClick = onNext
+            )
+
+            SearchAction(
+                text = "Limpiar",
+                onClick = onClear
+            )
+
+            SearchAction(
+                text = "Reemplazar",
+                onClick = onReplaceCurrent
+            )
+
+            SearchAction(
+                text = "Reemplazar todos",
                 onClick = onReplaceAll
-            ) {
-                Text("Reemplazar todos")
-            }
+            )
+
+            SearchAction(
+                text = "X",
+                onClick = onClose
+            )
         }
 
         if (currentMatch != null) {
 
             Text(
                 text = "Línea ${currentMatch.line}: ${currentMatch.lineText}",
-                fontSize = 12.sp,
+                fontSize = 11.sp,
                 fontFamily = FontFamily.Monospace,
                 color =
                     MaterialTheme.colorScheme.onSurfaceVariant.copy(
-                        alpha = 0.75f
+                        alpha = 0.65f
                     ),
-                modifier = Modifier
-                    .padding(top = 6.dp)
+                modifier = Modifier.padding(top = 4.dp)
             )
         }
     }
+}
+
+@Composable
+private fun SearchAction(
+    text: String,
+    onClick: () -> Unit
+) {
+    Text(
+        text = text,
+        fontSize = 12.sp,
+        fontFamily = FontFamily.Monospace,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = Modifier
+            .clickable {
+                onClick()
+            }
+            .padding(
+                horizontal = 8.dp,
+                vertical = 6.dp
+            )
+    )
 }

@@ -18,7 +18,9 @@ fun Modifier.keditKeyboardShortcuts(
     onToggleTheme: () -> Unit,
     onToggleTerminal: () -> Unit,
     onSaveDocumentAs: () -> Unit,
-    onToggleSearch: () -> Unit
+    onToggleSearch: () -> Unit,
+    onGoToParentDirectory: () -> Unit,
+    onToggleExplorer: () -> Unit
 ): Modifier {
 
     return this.onPreviewKeyEvent { event ->
@@ -66,6 +68,16 @@ fun Modifier.keditKeyboardShortcuts(
                 }
                 Key.F -> {
                     onToggleSearch()
+                    true
+                }
+
+                Key.B -> {
+                    onGoToParentDirectory()
+                    true
+                }
+
+                Key.D -> {
+                    onToggleExplorer()
                     true
                 }
 
