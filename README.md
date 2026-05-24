@@ -1,95 +1,147 @@
-This is a Kotlin Multiplatform project targeting Android, iOS, Web, Desktop (JVM), Server.
+# KEdit
 
-* [/composeApp](./composeApp/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](./composeApp/src/commonMain/kotlin) is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](./composeApp/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./composeApp/src/jvmMain/kotlin)
-    folder is the appropriate location.
+KEdit es un editor de texto multiplataforma desarrollado como proyecto final del ciclo de Desarrollo de Aplicaciones Multiplataforma.
 
-* [/iosApp](./iosApp/iosApp) contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform,
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+El objetivo principal del proyecto es crear una aplicación moderna, funcional y multiplataforma utilizando Kotlin Multiplatform y Compose Multiplatform. KEdit permite trabajar con documentos de texto en distintas plataformas, manteniendo una interfaz coherente y adaptada a cada entorno.
 
-* [/server](./server/src/main/kotlin) is for the Ktor server application.
+El proyecto incluye versiones para:
 
-* [/shared](./shared/src) is for the code that will be shared between all targets in the project.
-  The most important subfolder is [commonMain](./shared/src/commonMain/kotlin). If preferred, you
-  can add code to the platform-specific folders here too.
-
-### Build and Run Android Application
-
-To build and run the development version of the Android app, use the run configuration from the run widget
-in your IDE’s toolbar or build it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:assembleDebug
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:assembleDebug
-  ```
-
-### Build and Run Desktop (JVM) Application
-
-To build and run the development version of the desktop app, use the run configuration from the run widget
-in your IDE’s toolbar or run it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:run
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:run
-  ```
-
-### Build and Run Server
-
-To build and run the development version of the server, use the run configuration from the run widget
-in your IDE’s toolbar or run it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :server:run
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :server:run
-  ```
-
-### Build and Run Web Application
-
-To build and run the development version of the web app, use the run configuration from the run widget
-in your IDE's toolbar or run it directly from the terminal:
-- for the Wasm target (faster, modern browsers):
-  - on macOS/Linux
-    ```shell
-    ./gradlew :composeApp:wasmJsBrowserDevelopmentRun
-    ```
-  - on Windows
-    ```shell
-    .\gradlew.bat :composeApp:wasmJsBrowserDevelopmentRun
-    ```
-- for the JS target (slower, supports older browsers):
-  - on macOS/Linux
-    ```shell
-    ./gradlew :composeApp:jsBrowserDevelopmentRun
-    ```
-  - on Windows
-    ```shell
-    .\gradlew.bat :composeApp:jsBrowserDevelopmentRun
-    ```
-
-### Build and Run iOS Application
-
-To build and run the development version of the iOS app, use the run configuration from the run widget
-in your IDE’s toolbar or open the [/iosApp](./iosApp) directory in Xcode and run it from there.
+- Desktop JVM
+- Android
+- Web WASM
+- Backend Ktor
+- Estructura preparada para iOS
 
 ---
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html),
-[Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform/#compose-multiplatform),
-[Kotlin/Wasm](https://kotl.in/wasm/)…
+## Características principales
 
-We would appreciate your feedback on Compose/Web and Kotlin/Wasm in the public Slack channel [#compose-web](https://slack-chats.kotlinlang.org/c/compose-web).
-If you face any issues, please report them on [YouTrack](https://youtrack.jetbrains.com/newIssue?project=CMP).
+### Versión Desktop
+
+La versión de escritorio es la versión principal y más completa del proyecto.
+
+Incluye:
+
+- Creación de documentos.
+- Apertura de archivos locales.
+- Guardado local.
+- Guardar como.
+- Gestión de múltiples documentos mediante pestañas.
+- Cierre de documentos con aviso de cambios sin guardar.
+- Explorador de archivos integrado.
+- Selección de carpeta de trabajo.
+- Búsqueda interna.
+- Reemplazo de texto.
+- Reemplazar siguiente.
+- Reemplazar todos.
+- Sensibilidad a mayúsculas en la búsqueda.
+- Scroll automático al resultado encontrado.
+- Indicador de línea y columna.
+- Contador de líneas y caracteres.
+- Tema claro y oscuro.
+- Preferencias persistentes.
+- Terminal integrada con comandos internos.
+- Atajos de teclado.
+- Resaltado visual básico.
+- Registro e inicio de sesión.
+- Guardado remoto de documentos.
+- Listado de documentos remotos.
+- Apertura de documentos remotos.
+- Actualización de documentos remotos.
+- Guardado remoto mediante `Ctrl + S` cuando el documento pertenece al backend.
+
+### Versión Android
+
+La versión Android es una adaptación móvil simplificada del editor.
+
+Incluye:
+
+- Creación de documentos.
+- Edición de contenido.
+- Gestión de pestañas.
+- Búsqueda de texto.
+- Cambio de tema.
+- Barra de estado adaptada.
+- Inicio de sesión y registro conectados al backend.
+
+No incluye terminal integrada ni explorador avanzado de archivos, ya que estas funcionalidades están pensadas principalmente para escritorio.
+
+### Versión Web
+
+La versión Web está desarrollada con Compose Multiplatform para Web/WASM.
+
+Incluye:
+
+- Creación de documentos en memoria.
+- Edición de texto.
+- Gestión de pestañas.
+- Búsqueda.
+- Reemplazo.
+- Sidebar de documentos.
+- Cambio de tema.
+- Panel de cuenta en modo demostración.
+- Acceso visual como versión web del proyecto.
+
+La integración completa con backend en Web queda planteada como mejora futura debido a las limitaciones encontradas con Kotlin/WASM y las peticiones HTTP dentro del tiempo disponible del proyecto.
+
+### Backend
+
+El backend se ha desarrollado con Ktor Server y PostgreSQL.
+
+Permite:
+
+- Registro de usuarios.
+- Inicio de sesión.
+- Guardado remoto de documentos.
+- Listado de documentos de un usuario.
+- Apertura de documentos remotos.
+- Actualización de documentos existentes.
+
+---
+
+## Tecnologías utilizadas
+
+- Kotlin
+- Kotlin Multiplatform
+- Compose Multiplatform
+- Compose Desktop
+- Compose Android
+- Compose Web / WASM
+- Ktor Server
+- Ktor Client
+- PostgreSQL
+- Exposed
+- Gradle
+- Docker Compose
+- Git
+- GitHub
+
+---
+
+## Estructura del proyecto
+
+```text
+KEdit/
+├── composeApp/
+│   └── src/
+│       ├── commonMain/
+│       ├── androidMain/
+│       ├── jvmMain/
+│       ├── webMain/
+│       └── iosMain/
+│
+├── shared/
+│   └── src/
+│       └── commonMain/
+│
+├── server/
+│   └── src/
+│       └── main/
+│
+├── iosApp/
+│
+├── gradle/
+│
+├── build.gradle.kts
+├── settings.gradle.kts
+└── README.md
