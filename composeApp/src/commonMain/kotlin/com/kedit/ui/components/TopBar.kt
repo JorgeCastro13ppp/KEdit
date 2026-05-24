@@ -38,7 +38,10 @@ fun TopBar(
     onToggleSearch: () -> Unit,
     onOpenDirectory: () -> Unit,
     onToggleExplorer: () -> Unit,
-    isExplorerVisible: Boolean
+    isExplorerVisible: Boolean,
+    onAccountClick: (() -> Unit)? = null,
+    onSaveRemoteClick: (() -> Unit)? = null,
+    onRemoteDocumentsClick: (() -> Unit)? = null
 ) {
     Row(
         modifier = Modifier
@@ -82,6 +85,26 @@ fun TopBar(
                 if (isExplorerVisible) "Explorador-" else "Explorador+",
                 onToggleExplorer
             )
+            if (onAccountClick != null) {
+                TopBarAction(
+                    text = "Cuenta",
+                    onClick = onAccountClick
+                )
+            }
+
+            if (onSaveRemoteClick != null) {
+                TopBarAction(
+                    text = "Guardar nube",
+                    onClick = onSaveRemoteClick
+                )
+            }
+
+            if (onRemoteDocumentsClick != null) {
+                TopBarAction(
+                    text = "Remotos",
+                    onClick = onRemoteDocumentsClick
+                )
+            }
         }
     }
 

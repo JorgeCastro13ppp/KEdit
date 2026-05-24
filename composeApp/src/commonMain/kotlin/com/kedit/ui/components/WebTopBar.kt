@@ -23,7 +23,8 @@ fun WebTopBar(
     onToggleTheme: () -> Unit,
     onToggleSearch: () -> Unit,
     onShowVersions: () -> Unit,
-    onToggleSidebar: () -> Unit
+    onToggleSidebar: () -> Unit,
+    onAccountClick: () -> Unit
 ) {
 
     Row(
@@ -94,6 +95,16 @@ fun WebTopBar(
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.clickable {
                     onToggleSidebar()
+                }
+            )
+
+            Text(
+                text = "Cuenta",
+                fontSize = 13.sp,
+                fontFamily = FontFamily.Monospace,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.clickable {
+                    onAccountClick()
                 }
             )
 

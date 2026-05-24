@@ -412,4 +412,64 @@ class EditorViewModel {
             isExplorerVisible = !state.isExplorerVisible
         )
     }
+
+    fun openRemoteDocument(
+        remoteId: Int,
+        name: String,
+        content: String
+    ) {
+
+        val alreadyOpenDocument =
+            state.openDocuments.find {
+                it.remoteId == remoteId
+            }
+
+        if (alreadyOpenDocument != null) {
+
+            state =
+                state.copy(
+                    activeDocument = alreadyOpenDocument
+                )
+
+            return
+        }
+
+        val document =
+            Document(
+                remoteId = remoteId,
+                name = name,
+                content = content,
+                path = null,
+                isModified = false
+            )
+
+        state =
+            state.copy(
+                openDocuments = state.openDocuments + document,
+                activeDocument = document
+            )
+    }
+
+    fun markActiveDocumentAsSaved() {
+
+        val active =
+            state.activeDocument ?: return
+
+        val updatedDocument =
+            active.copy(
+                isModified = false
+            )
+
+        state =
+            state.copy(
+                openDocuments =
+                    state.openDocuments.map {
+                        if (it.id == updatedDocument.id)
+                            updatedDocument
+                        else
+                            it
+                    },
+                activeDocument = updatedDocument
+            )
+    }
 }

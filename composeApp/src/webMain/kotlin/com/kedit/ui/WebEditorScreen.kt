@@ -19,11 +19,13 @@ import com.kedit.ui.components.EditorTabs
 import com.kedit.ui.components.SearchBar
 import com.kedit.ui.components.StatusBar
 import com.kedit.ui.components.VersionsScreen
+import com.kedit.ui.components.WebSessionPanel
 import com.kedit.ui.components.WebSidebar
 import com.kedit.ui.components.WebTopBar
 import com.kedit.ui.theme.KEditTheme
 import com.kedit.viewmodel.EditorViewModel
 import com.kedit.viewmodel.SearchViewModel
+import com.kedit.viewmodel.WebSessionViewModel
 
 @Composable
 fun WebEditorScreen() {
@@ -36,14 +38,23 @@ fun WebEditorScreen() {
         SearchViewModel()
     }
 
+    val sessionViewModel = remember {
+        WebSessionViewModel()
+    }
+
     val state = viewModel.state
     val activeDocument = state.activeDocument
 
     var showVersions by remember {
         mutableStateOf(false)
     }
+
     var isSidebarVisible by remember {
         mutableStateOf(true)
+    }
+
+    var showAccountPanel by remember {
+        mutableStateOf(false)
     }
 
     var documentPendingCloseId by remember {
@@ -126,8 +137,18 @@ fun WebEditorScreen() {
 
                             onToggleSidebar = {
                                 isSidebarVisible = !isSidebarVisible
+                            },
+
+                            onAccountClick = {
+                                showAccountPanel = !showAccountPanel
                             }
                         )
+
+                        if (showAccountPanel) {
+                            WebSessionPanel(
+                                sessionViewModel = sessionViewModel
+                            )
+                        }
 
                         EditorTabs(
                             documents = state.openDocuments,
@@ -187,13 +208,15 @@ fun WebEditorScreen() {
 
                                     val newContent =
                                         searchViewModel.replaceCurrent(
-                                            content = activeDocument?.content ?: ""
+                                            content =
+                                                activeDocument?.content ?: ""
                                         )
 
                                     viewModel.updateContent(newContent)
 
                                     searchViewModel.updateQuery(
-                                        query = searchViewModel.state.query,
+                                        query =
+                                            searchViewModel.state.query,
                                         content = newContent
                                     )
                                 },
@@ -202,13 +225,15 @@ fun WebEditorScreen() {
 
                                     val newContent =
                                         searchViewModel.replaceAll(
-                                            content = activeDocument?.content ?: ""
+                                            content =
+                                                activeDocument?.content ?: ""
                                         )
 
                                     viewModel.updateContent(newContent)
 
                                     searchViewModel.updateQuery(
-                                        query = searchViewModel.state.query,
+                                        query =
+                                            searchViewModel.state.query,
                                         content = newContent
                                     )
                                 }
@@ -228,6 +253,7 @@ fun WebEditorScreen() {
                                 searchViewModel.state.currentIndex,
 
                             onContentChange = {
+
                                 viewModel.updateContent(it)
 
                                 searchViewModel.updateQuery(
@@ -240,7 +266,8 @@ fun WebEditorScreen() {
                         StatusBar(
                             activeDocument = activeDocument,
                             isDarkMode = viewModel.settings.isDarkMode,
-                            autoSaveEnabled = viewModel.settings.autoSaveEnabled
+                            autoSaveEnabled =
+                                viewModel.settings.autoSaveEnabled
                         )
                     }
                 }

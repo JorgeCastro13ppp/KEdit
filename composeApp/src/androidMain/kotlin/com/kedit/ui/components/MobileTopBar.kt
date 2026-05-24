@@ -21,7 +21,8 @@ fun MobileTopBar(
     documentName: String,
     onNewDocument: () -> Unit,
     onToggleTheme: () -> Unit,
-    onToggleSearch: () -> Unit
+    onToggleSearch: () -> Unit,
+    onAccountClick: () -> Unit
 ) {
 
     Row(
@@ -77,6 +78,16 @@ fun MobileTopBar(
             modifier = Modifier.clickable {
                 onToggleSearch()
             }
+        )
+        Text(
+            text = "Cuenta",
+            color = MaterialTheme.colorScheme.primary,
+            fontSize = 12.sp,
+            fontFamily = FontFamily.Monospace,
+            modifier = Modifier
+                .clickable {
+                    onAccountClick()
+                }
         )
     }
 }

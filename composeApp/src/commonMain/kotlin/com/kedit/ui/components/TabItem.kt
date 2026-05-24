@@ -27,17 +27,40 @@ fun TabItem(
     onClose: () -> Unit
 ) {
 
+    val isRemote =
+        document.remoteId != null
+
     val background =
-        if (isActive)
-            MaterialTheme.colorScheme.primaryContainer
-        else
-            MaterialTheme.colorScheme.surfaceVariant
+        when {
+            isActive && isRemote ->
+                MaterialTheme.colorScheme.tertiaryContainer
+
+            isActive ->
+                MaterialTheme.colorScheme.primaryContainer
+
+            isRemote ->
+                MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.55f)
+
+            else ->
+                MaterialTheme.colorScheme.surfaceVariant
+        }
 
     val textColor =
-        if (isActive)
-            MaterialTheme.colorScheme.onPrimaryContainer
-        else
-            MaterialTheme.colorScheme.onSurfaceVariant
+        when {
+            isActive && isRemote ->
+                MaterialTheme.colorScheme.onTertiaryContainer
+
+            isActive ->
+                MaterialTheme.colorScheme.onPrimaryContainer
+
+            isRemote ->
+                MaterialTheme.colorScheme.onTertiaryContainer
+
+            else ->
+                MaterialTheme.colorScheme.onSurfaceVariant
+        }
+
+
 
     Row(
         modifier = Modifier

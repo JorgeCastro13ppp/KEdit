@@ -23,7 +23,9 @@ import com.kedit.viewmodel.SearchViewModel
 import com.kedit.ui.components.MobileTopBar
 import com.kedit.ui.components.MobileEditorArea
 import com.kedit.ui.components.MobileSearchBar
+import com.kedit.ui.components.MobileSessionPanel
 import com.kedit.ui.components.MobileStatusBar
+import com.kedit.viewmodel.MobileSessionViewModel
 
 @Composable
 fun AndroidEditorScreen() {
@@ -39,6 +41,14 @@ fun AndroidEditorScreen() {
     val state = viewModel.state
 
     val activeDocument = state.activeDocument
+
+    val sessionViewModel = remember {
+        MobileSessionViewModel()
+    }
+
+    var showAccountPanel by remember {
+        mutableStateOf(false)
+    }
 
     KEditTheme(
         darkTheme = viewModel.settings.isDarkMode
@@ -66,8 +76,17 @@ fun AndroidEditorScreen() {
 
                     onToggleSearch = {
                         searchViewModel.toggle()
+                    },
+                    onAccountClick = {
+                        showAccountPanel = !showAccountPanel
                     }
                 )
+
+                if (showAccountPanel) {
+                    MobileSessionPanel(
+                        sessionViewModel = sessionViewModel
+                    )
+                }
 
                 EditorTabs(
                     documents = state.openDocuments,

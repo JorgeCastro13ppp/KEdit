@@ -8,6 +8,7 @@ fun generateId(): String {
 
 data class Document(
     val id: String = generateId(),
+    val remoteId: Int? = null,
     var name: String = "Untitled",
     var path: String? = null,
     var content: String = "",

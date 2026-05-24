@@ -44,6 +44,10 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.activity.compose)
+            implementation("io.ktor:ktor-client-core:2.3.12")
+            implementation("io.ktor:ktor-client-okhttp:2.3.12")
+
+
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
@@ -57,6 +61,7 @@ kotlin {
             implementation(projects.shared)
             implementation(libs.kotlinx.coroutines.core)
 
+
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -64,6 +69,11 @@ kotlin {
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
+            implementation("io.ktor:ktor-client-core:2.3.12")
+            implementation("io.ktor:ktor-client-cio:2.3.12")
+        }
+
+        webMain.dependencies {
         }
     }
 }

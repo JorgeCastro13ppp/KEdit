@@ -30,10 +30,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.ui.unit.dp
 import com.kedit.ui.components.FileExplorer
+import com.kedit.ui.components.RemoteDocumentsPanel
 import com.kedit.viewmodel.SearchViewModel
 import com.kedit.ui.components.SearchBar
+import com.kedit.ui.components.SessionPanel
+import com.kedit.viewmodel.SessionViewModel
+
 @Composable
-fun EditorScreen() {
+fun DesktopEditorScreen() {
 
     val viewModel = remember {
         EditorViewModel()
@@ -43,6 +47,9 @@ fun EditorScreen() {
 
     val activeDocument = state.activeDocument
 
+    val sessionViewModel = remember {
+        SessionViewModel()
+    }
 
     val terminalViewModel = remember {
         TerminalViewModel()
@@ -52,8 +59,16 @@ fun EditorScreen() {
         SearchViewModel()
     }
 
+    var showAccountPanel by remember {
+        mutableStateOf(false)
+    }
+
     var documentPendingCloseId by remember {
         mutableStateOf<String?>(null)
+    }
+
+    var showRemoteDocuments by remember {
+        mutableStateOf(false)
     }
 
     fun requestCloseDocument(id: String) {
@@ -81,6 +96,31 @@ fun EditorScreen() {
         requestCloseDocument(active.id)
     }
 
+    fun saveCurrentDocument() {
+
+        val document =
+            viewModel.state.activeDocument ?: return
+
+        if (
+            sessionViewModel.currentUser != null &&
+            document.remoteId != null
+        ) {
+
+            sessionViewModel.saveRemoteDocument(
+                remoteId = document.remoteId,
+                name = document.name,
+                content = document.content,
+                onSaved = {
+                    viewModel.markActiveDocumentAsSaved()
+                }
+            )
+
+        } else {
+
+            viewModel.saveActiveDocument()
+        }
+    }
+
     KEditTheme(
         darkTheme = viewModel.settings.isDarkMode
     ) {
@@ -95,7 +135,7 @@ fun EditorScreen() {
                     },
 
                     onSaveDocument = {
-                        viewModel.saveActiveDocument()
+                        saveCurrentDocument()
                     },
 
                     onOpenDocument = {
@@ -168,47 +208,107 @@ fun EditorScreen() {
                     modifier = Modifier.weight(1f)
                 ) {
 
-                TopBar(
-                    documentName =
-                        activeDocument?.name ?: "Sin documento",
+                    TopBar(
+                        documentName =
+                            activeDocument?.name ?: "Sin documento",
 
-                    onNewDocument = {
-                        viewModel.createDocument()
-                    },
-                    onSaveDocument = {
-                        viewModel.saveActiveDocument()
-                    },
+                        onNewDocument = {
+                            viewModel.createDocument()
+                        },
+                        onSaveDocument = {
+                            saveCurrentDocument()
+                        },
 
-                    onToggleTheme = {
-                        viewModel.toggleTheme()
-                    },
-                    onOpenDocument = {
-                        viewModel.openFile()
-                    },
-                    onToggleTerminal = {
-                        terminalViewModel.toggleVisibility()
-                    },
-                    isTerminalVisible =
-                        terminalViewModel.state.isVisible,
+                        onToggleTheme = {
+                            viewModel.toggleTheme()
+                        },
+                        onOpenDocument = {
+                            viewModel.openFile()
+                        },
+                        onToggleTerminal = {
+                            terminalViewModel.toggleVisibility()
+                        },
+                        isTerminalVisible =
+                            terminalViewModel.state.isVisible,
 
-                    onSaveAsDocument = {
-                        viewModel.saveActiveDocumentAs()
-                    },
-                    onToggleSearch = {
-                        searchViewModel.toggle()
-                    },
-                    onOpenDirectory = {
-                        viewModel.openDirectory()
-                    },
-                    onToggleExplorer = {
-                        viewModel.toggleExplorerVisibility()
-                    },
+                        onSaveAsDocument = {
+                            viewModel.saveActiveDocumentAs()
+                        },
+                        onToggleSearch = {
+                            searchViewModel.toggle()
+                        },
+                        onOpenDirectory = {
+                            viewModel.openDirectory()
+                        },
+                        onToggleExplorer = {
+                            viewModel.toggleExplorerVisibility()
+                        },
 
-                    isExplorerVisible =
-                        state.isExplorerVisible
+                        isExplorerVisible =
+                            state.isExplorerVisible,
 
+                        onAccountClick = {
+                            showAccountPanel = !showAccountPanel
+                        },
+                        onSaveRemoteClick =
+                            if (sessionViewModel.currentUser != null) {
+                                {
+                                    val document = viewModel.state.activeDocument
 
-                )
+                                    if (document != null) {
+                                        sessionViewModel.saveRemoteDocument(
+                                            remoteId = document.remoteId,
+                                            name = document.name,
+                                            content = document.content,
+                                            onSaved = {
+                                                viewModel.markActiveDocumentAsSaved()
+                                            }
+                                        )
+                                    }
+                                }
+                            } else {
+                                null
+                            },
+
+                        onRemoteDocumentsClick =
+                            if (sessionViewModel.currentUser != null) {
+                                {
+                                    showRemoteDocuments = !showRemoteDocuments
+
+                                    if (showRemoteDocuments) {
+                                        sessionViewModel.loadRemoteDocuments()
+                                    }
+                                }
+                            } else {
+                                null
+                            }
+
+                    )
+
+                    if (showAccountPanel) {
+                        SessionPanel(
+                            sessionViewModel = sessionViewModel
+                        )
+                    }
+
+                    if (showRemoteDocuments) {
+                        RemoteDocumentsPanel(
+                            documents = sessionViewModel.remoteDocuments,
+                            onOpenDocument = { documentId ->
+
+                                sessionViewModel.openRemoteDocument(
+                                    documentId = documentId
+                                ) { name, content ->
+
+                                    viewModel.openRemoteDocument(
+                                        remoteId = documentId,
+                                        name = name,
+                                        content = content
+                                    )
+                                }
+                            }
+                        )
+                    }
 
                     EditorTabs(
                         documents = state.openDocuments,
@@ -334,7 +434,7 @@ fun EditorScreen() {
                                     },
 
                                     onSaveDocument = {
-                                        viewModel.saveActiveDocument()
+                                        saveCurrentDocument()
                                     },
 
                                     onToggleTheme = {
@@ -396,9 +496,9 @@ fun EditorScreen() {
                         isDarkMode = viewModel.settings.isDarkMode,
                         autoSaveEnabled = viewModel.settings.autoSaveEnabled
                     )
+                }
             }
         }
-    }
         if (documentPendingCloseId != null) {
 
             AlertDialog(
@@ -445,4 +545,4 @@ fun EditorScreen() {
                 }
             )
         }
-}}
+    }}
