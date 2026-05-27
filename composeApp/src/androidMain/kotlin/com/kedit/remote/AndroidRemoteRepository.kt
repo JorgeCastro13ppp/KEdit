@@ -12,7 +12,7 @@ import io.ktor.http.contentType
 class AndroidRemoteRepository {
 
     private val baseUrl =
-        "http://10.0.2.2:8082"
+        "https://kedit-backend.onrender.com/"
 
     private val client =
         HttpClient(OkHttp)

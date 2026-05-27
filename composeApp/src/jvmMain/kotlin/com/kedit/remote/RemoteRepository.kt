@@ -13,7 +13,7 @@ import io.ktor.client.request.put
 class RemoteRepository {
 
     private val baseUrl =
-        "http://localhost:8082"
+        "https://kedit-backend.onrender.com/"
 
     private val client =
         HttpClient()
