@@ -13,9 +13,13 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
 
 fun main() {
+
+    val port =
+        System.getenv("PORT")?.toIntOrNull() ?: 8082
+
     embeddedServer(
         factory = Netty,
-        port = 8082,
+        port = port,
         host = "0.0.0.0",
         module = Application::module
     ).start(wait = true)
